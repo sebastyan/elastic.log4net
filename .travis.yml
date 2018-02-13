@@ -1,0 +1,6 @@
+language: csharp
+solution: elastic.log4net.sln
+install:
+  - nuget restore elastic.log4net.sln
+script:
+  - xbuild /p:Configuration=Release elastic.log4net.sln
