@@ -11,6 +11,6 @@ namespace elastic.log4net.Model
         public String Type { get; set; }
         public String Message { get; set; }
         public String StackTrace { get; set; }
-        public LogEntryException InnerException { get; set; }
+        public String InnerException { get; set; }
     }
 }

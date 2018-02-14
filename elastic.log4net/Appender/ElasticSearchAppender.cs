@@ -16,14 +16,29 @@ namespace elastic.log4net.Appender
     /// </summary>
     public class ElasticSearchAppender : AppenderSkeleton
     {
-        public const string AutoConfigureAppSetting = "Glimpse.Log4Net.AutoConfigure";
+        private IElasticClient client;
 
-        private ElasticClient client;
-
+        /// <summary>
+        /// URL string of Elasticsearch node.
+        /// </summary>
         public string ElasticNode { get; set; }
-
+        /// <summary>
+        /// Base index to insert data into a Elasticsearch database.
+        /// </summary>
         public string BaseIndex { get; set; } = "log4net";
-
+        /// <summary>
+        /// Username for Elasticsearch Basic Authentication.
+        /// </summary>
+        public string UserName { get; set; } = null;
+        /// <summary>
+        /// Password for Elasticsearch Basic Authentication.
+        /// </summary>
+        public string Password { get; set; } = null;
+        /// <summary>
+        /// Property to be used for test purposes.
+        /// </summary>
+        public IElasticClient Client { set => client = value; }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -40,6 +55,10 @@ namespace elastic.log4net.Appender
             if(this.client == null)
             {
                 var settings = new ConnectionSettings(new Uri(this.ElasticNode)).DefaultIndex(this.BaseIndex);
+                if(UserName != null && Password != null)
+                {
+                    settings.BasicAuthentication(UserName, Password);
+                }
                 this.client = new ElasticClient(settings);
             }
         }
@@ -70,7 +89,7 @@ namespace elastic.log4net.Appender
                 Message = exception.Message,
                 StackTrace = exception.StackTrace,
                 Type = exception.GetType().Name,
-                InnerException = CreateExceptionForLogEntry(exception.InnerException)
+                InnerException = exception.InnerException != null ? exception.Message : string.Empty
             };
         }
 
@@ -88,7 +107,7 @@ namespace elastic.log4net.Appender
             };
         }
 
-        private async void SendLogEvent(object data)
+        private async void SendLogEvent(LogEntry data)
         {
             try
             {

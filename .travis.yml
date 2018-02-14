@@ -2,5 +2,8 @@ language: csharp
 solution: elastic.log4net.sln
 install:
   - nuget restore elastic.log4net.sln
+  - nuget install NUnit.Runners -Version 3.9.0 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release elastic.log4net.sln
+  - mono ./testrunner/NUnit.Runners.3.9.0/tools/nunit-console.exe ./elastic.log4net.Tests/bin/Release/elastic.log4net.Tests.dll
+
