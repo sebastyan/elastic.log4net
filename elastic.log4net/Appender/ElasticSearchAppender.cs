@@ -89,7 +89,7 @@ namespace elastic.log4net.Appender
                 Message = exception.Message,
                 StackTrace = exception.StackTrace,
                 Type = exception.GetType().Name,
-                InnerException = exception.InnerException != null ? exception.Message : string.Empty
+                InnerException = exception.InnerException != null ? exception.InnerException.Message : string.Empty
             };
         }
 
