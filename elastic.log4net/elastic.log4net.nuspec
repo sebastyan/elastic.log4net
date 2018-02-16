@@ -15,8 +15,8 @@
 		<copyright>Copyright 2018</copyright>
 		<tags>Log log4net Elasticsearch Logging nest</tags>
 		<dependencies>
-			<dependency id="Elasticsearch.Net" version="[6.0,7.0)" />
-			<dependency id="log4net" version="[2.0, 3.0)" />
+			<dependency id="Elasticsearch.Net" version="6.0" />
+			<dependency id="log4net" version="2.0" />
 		</dependencies>
 	</metadata>
 	<files>
