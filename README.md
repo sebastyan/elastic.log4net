@@ -5,7 +5,7 @@ ElasticSearch appender for log4net
 
 Library with a log4net appender for ElasticSearch.
 
-##How to configure it
+## How to configure it
 The appender for ElasticSearch could be configured adding configuration in App.config or Web.config file.
 
 A new section with log4net name needs to be declared inside configSections tag on config file. 
