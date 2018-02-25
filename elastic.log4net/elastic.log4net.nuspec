@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
 	<metadata>
-		<id>elastic.log4net</id>
+		<id>log4net.els</id>
 		<version>0.1.0</version>
-		<title>elastic.log4net</title>
+		<title>log4net.els</title>
 		<authors>Sebastián Mota Gómez</authors>
 		<owners>Sebastián Mota Gómez</owners>
 		<licenseUrl>https://www.gnu.org/licenses/lgpl-3.0.en.html</licenseUrl>
@@ -16,6 +16,7 @@
 		<tags>Log log4net Elasticsearch Logging nest</tags>
 		<dependencies>
 			<dependency id="Elasticsearch.Net" version="6.0" />
+			<dependency id="NEST" version="6.0" />
 			<dependency id="log4net" version="2.0" />
 		</dependencies>
 	</metadata>
