@@ -75,7 +75,7 @@ The log message will be sent to ElasticSearch in json format, using the index co
          "lineNumber":"24",
          "fullPath":"C:\\git\\elastic.log4net\\Application\\Program.cs",
          "methodName":"Main",
-         "fullInfo":"ConsoleApp1.Program.Main(C:\\git\\elastic.log4net\\Application\\Program.cs:24)"
+         "fullInfo":"Application.Program.Main(C:\\git\\elastic.log4net\\Application\\Program.cs:24)"
       }
    }
 }
