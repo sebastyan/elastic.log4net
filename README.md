@@ -8,7 +8,7 @@ Library with a log4net appender for ElasticSearch.
 ## How to configure it
 The appender for ElasticSearch could be configured adding configuration in App.config or Web.config file.
 
-A new section with log4net name needs to be declared inside configSections tag on config file. 
+A new section with log4net name needs to be declared inside configSections section on config file. 
 ```xml
 <configSections>
 	<section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net"/>
@@ -20,7 +20,7 @@ In order to configure configure the ElasticSearch's appender for the log4net, ne
 <appender name="elasticappender" type="elastic.log4net.Appender.ElasticSearchAppender, elastic.log4net">
      <elasticNode value="http://localhost:9200"></elasticNode>
      <baseIndex value="logEntry"></baseIndex>
-   </appender>
+</appender>
 ```
 
 Here you can see a complete config file example:
@@ -41,4 +41,9 @@ Here you can see a complete config file example:
 	</appender>
   </log4net>
 </configuration>
+```
+
+To declare it on C# code you can obtain the instance of the logger using this line of code:
+```c#
+ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 ```
