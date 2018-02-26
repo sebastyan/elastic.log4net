@@ -1,7 +1,9 @@
 # elastic.log4net
 ElasticSearch appender for log4net
 
-[![Build Status](https://travis-ci.org/sebastyan/elastic.log4net.svg?branch=master)](https://travis-ci.org/sebastyan/elastic.log4net)
+[![Build history](https://buildstats.info/travisci/chart/sebastyan/elastic.log4net)](https://travis-ci.org/sebastyan/elastic.log4net/builds)
+
+[![NuGet Badge](https://buildstats.info/nuget/log4net.els)](https://www.nuget.org/packages/log4net.els/)
 
 Library with a log4net appender for ElasticSearch.
 
