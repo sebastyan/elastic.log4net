@@ -21,7 +21,7 @@ In order to configure configure the ElasticSearch's appender for the log4net, ne
 ```xml
 <appender name="elasticappender" type="elastic.log4net.Appender.ElasticSearchAppender, elastic.log4net">
      <elasticNode value="http://localhost:9200"></elasticNode>
-     <baseIndex value="logEntry"></baseIndex>
+     <baseIndex value="logentry"></baseIndex>
 </appender>
 ```
 
@@ -41,7 +41,7 @@ Here you can see a complete config file example:
 	</root>
 	<appender name="elasticappender" type="elastic.log4net.Appender.ElasticSearchAppender, elastic.log4net">
 	  <elasticNode value="http://localhost:9200"></elasticNode>
-	  <baseIndex value="logEntry"></baseIndex>
+	  <baseIndex value="logentry"></baseIndex>
 	</appender>
   </log4net>
 </configuration>
