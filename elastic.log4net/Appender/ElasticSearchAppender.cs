@@ -43,6 +43,10 @@ namespace elastic.log4net.Appender
         /// </summary>
         public bool EnableGlobalContextLog { get; set; } = false;
         /// <summary>
+        /// Disables location information on log messages.
+        /// </summary>
+        public bool DisableLocationInfo { get; set; } = false;
+        /// <summary>
         /// Property to be used for test purposes.
         /// </summary>
         public IElasticClient Client { set => client = value; }
@@ -129,7 +133,7 @@ namespace elastic.log4net.Appender
 
         private LogEntryLocationInformation CreateLocationInfoForLogEntry(LocationInfo location)
         {
-            if (location == null)
+            if (location == null || DisableLocationInfo)
                 return null;
             return new LogEntryLocationInformation
             {
