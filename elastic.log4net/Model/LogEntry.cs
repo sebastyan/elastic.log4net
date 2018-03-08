@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using log4net.Util;
 
 namespace elastic.log4net.Model
 {
@@ -20,5 +21,6 @@ namespace elastic.log4net.Model
         public String ThreadName { get; set; }
         public LogEntryException Exception { get; set; }
         public LogEntryLocationInformation LocationInfo { get; set; }
+        public ReadOnlyPropertiesDictionary GlobalContext { get; set; }
     }
 }

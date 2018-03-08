@@ -2,28 +2,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using elastic.log4net.Model;
 using Elasticsearch.Net;
+using log4net;
 using log4net.Appender;
 using log4net.Core;
+using log4net.Util;
 using Nest;
 
 namespace elastic.log4net.Appender
 {
-    /// <summary>
+    
+    public class ElasticSearchAppender : AppenderSkeleton
+    {/// <summary>
     /// Log4net appender for ElasticSearch.
     /// </summary>
-    public class ElasticSearchAppender : AppenderSkeleton
-    {
         private IElasticClient client;
-
-        /// <summary>
-        /// URL string of Elasticsearch node.
-        /// </summary>
         private List<string> elasticNodes = new List<string>();
+        private ReadOnlyPropertiesDictionary globalPropertiesProcessed;
+
+
         /// <summary>
         /// Base index to insert data into a Elasticsearch database.
         /// </summary>
@@ -37,10 +39,15 @@ namespace elastic.log4net.Appender
         /// </summary>
         public string Password { get; set; } = null;
         /// <summary>
+        /// Enables log variables in GlobalContext
+        /// </summary>
+        public bool EnableGlobalContextLog { get; set; } = false;
+        /// <summary>
         /// Property to be used for test purposes.
         /// </summary>
         public IElasticClient Client { set => client = value; }
         
+
         /// <summary>
         /// 
         /// </summary>
@@ -103,7 +110,7 @@ namespace elastic.log4net.Appender
                 ThreadName = loggingEvent.ThreadName,
                 Exception = CreateExceptionForLogEntry(loggingEvent.ExceptionObject),
                 LocationInfo = CreateLocationInfoForLogEntry(loggingEvent.LocationInformation),
-                
+                GlobalContext = GetLog4NetGlobalContext()
             };
         }
 
@@ -132,6 +139,30 @@ namespace elastic.log4net.Appender
                 LineNumber = location.LineNumber,
                 MethodName = location.MethodName
             };
+        }
+
+        private ReadOnlyPropertiesDictionary GetLog4NetGlobalContext()
+        {
+            if (!EnableGlobalContextLog)
+            {
+                return null;
+            }
+
+            //Avoid load GlobalContext information in for each log call.
+            if (this.globalPropertiesProcessed == null
+                || (GlobalContext.Properties["RELOAD_GLOBLAL_CACHE"] != null 
+                && (bool)GlobalContext.Properties["RELOAD_GLOBLAL_CACHE"]))
+            {
+                GlobalContext.Properties["RELOAD_GLOBLAL_CACHE"] = false;
+
+                var globalContexPropertiesMethods = GlobalContext.Properties
+                .GetType()
+                .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
+
+                MethodInfo methodInfo = globalContexPropertiesMethods.FirstOrDefault(x => x.Name == "GetReadOnlyProperties");
+                this.globalPropertiesProcessed = new ReadOnlyPropertiesDictionary(((ReadOnlyPropertiesDictionary)methodInfo.Invoke(GlobalContext.Properties, null)));
+            }
+            return this.globalPropertiesProcessed;
         }
 
         private async void SendLogEvent(LogEntry data)
