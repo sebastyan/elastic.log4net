@@ -32,11 +32,14 @@ In order to configure configure the ElasticSearch's appender for the log4net, ne
 ```
 
 `baseIndex` is not a mandatory parameter. If yoy don't specify it, the default index value to use will be `log4net`.
-`elasticNode` each node represents an ElasticSearch node in a cluster. A new connection pool is created with the number of nodes defined on configuration.
-`enableGlobalContextLog` this configuration option sends with each log message the information in GlobalContext properties. *If this key is not specified the default value will be false*
-`disableLocationInfo` this configuration option delete location information from all log messages in order to reduce the information logged. *If this key is not specified the default value will be false*
 
-*Important note:* `enableGlobalContextLog` uses reflection and it could penalize the performace. By default, only one time the GlobalContext properties will be loaded. In case that you add more GlobalContext properties runtime plese add this piece of code just after ser the new GlobalContext property.
+`elasticNode` each node represents an ElasticSearch node in a cluster. A new connection pool is created with the number of nodes defined on configuration.
+
+`enableGlobalContextLog` this configuration option sends with each log message the information in GlobalContext properties. **If this key is not specified the default value will be false**
+
+`disableLocationInfo` this configuration option delete location information from all log messages in order to reduce the information logged. **If this key is not specified the default value will be false**
+
+**Important note:** `enableGlobalContextLog` uses reflection and it could penalize the performace. By default, only one time the GlobalContext properties will be loaded. In case that you add more GlobalContext properties runtime plese add this piece of code just after ser the new GlobalContext property.
 ```c#
 GlobalContext.Properties["RELOAD_GLOBLAL_CACHE"] = true;
 ```
