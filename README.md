@@ -18,6 +18,9 @@ A new section with log4net name needs to be declared inside configSections secti
 ```
 
 In order to configure configure the ElasticSearch's appender for the log4net, new appender tag needs to be define inside <log4net>. 
+
+#Version 0.1.0
+
 ```xml
 <appender name="elasticappender" type="elastic.log4net.Appender.ElasticSearchAppender, elastic.log4net">
      <elasticNode value="http://localhost:9200"></elasticNode>
@@ -26,6 +29,7 @@ In order to configure configure the ElasticSearch's appender for the log4net, ne
 ```
 
 `baseIndex` is not a mandatory parameter. If yoy don't specify it, the default index value to use will be `log4net`.
+`elasticNode` url address where ElasticSearch is listening request.
 
 Here you can see a complete config file example:
 ```xml
