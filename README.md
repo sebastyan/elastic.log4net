@@ -26,7 +26,7 @@ In order to configure configure the ElasticSearch's appender for the log4net, ne
 	<elasticNode value="http://192.168.0.120:9200"></elasticNode>
 	<elasticNode value="http://my.dns.host:9200"></elasticNode>
 	<enableGlobalContextLog value="true"></enableGlobalContextLog>
-	<disableLocationInfo value="true"></enableGlobalContextLog>
+	<disableLocationInfo value="true"></disableLocationInfo>
      <baseIndex value="logentry"></baseIndex>
 </appender>
 ```
@@ -62,7 +62,7 @@ Here you can see a complete config file example:
 		<elasticNode value="http://192.168.0.120:9200"></elasticNode>
 		<elasticNode value="http://my.dns.host:9200"></elasticNode>
 		<enableGlobalContextLog value="true"></enableGlobalContextLog>
-		<disableLocationInfo value="true"></enableGlobalContextLog>
+		<disableLocationInfo value="true"></disableLocationInfo>
 		<baseIndex value="logentry"></baseIndex>
 	</appender>
   </log4net>
