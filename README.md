@@ -22,18 +22,18 @@ In order to configure configure the ElasticSearch's appender for the log4net, ne
 ### Current version (0.2.0)
 ```xml
 <appender name="elasticappender" type="elastic.log4net.Appender.ElasticSearchAppender, elastic.log4net">
-     <elasticNode value="http://localhost:9200"></elasticNode>
-	 <elasticNode value="http://192.168.0.120:9200"></elasticNode>
-	 <elasticNode value="http://my.dns.host:9200"></elasticNode>
-	 <enableGlobalContextLog value="true"></enableGlobalContextLog>
-	 <disableLocationInfo value="true"></enableGlobalContextLog>
+	<elasticNode value="http://localhost:9200"></elasticNode>
+	<elasticNode value="http://192.168.0.120:9200"></elasticNode>
+	<elasticNode value="http://my.dns.host:9200"></elasticNode>
+	<enableGlobalContextLog value="true"></enableGlobalContextLog>
+	<disableLocationInfo value="true"></enableGlobalContextLog>
      <baseIndex value="logentry"></baseIndex>
 </appender>
 ```
 
 `baseIndex` is not a mandatory parameter. If yoy don't specify it, the default index value to use will be `log4net`.
 
-`elasticNode` each node represents an ElasticSearch node in a cluster. A new connection pool is created with the number of nodes defined on configuration.
+`elasticNode` each node represents an ElasticSearch node in a cluster. A new connection pool is created with the number of nodes defined on configuration. *You can define only one node if you prefer, only one is mandatory*
 
 `enableGlobalContextLog` this configuration option sends with each log message the information in GlobalContext properties. **If this key is not specified the default value will be false**
 
