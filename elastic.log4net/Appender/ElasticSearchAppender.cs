@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using elastic.log4net.Handlers;
 using elastic.log4net.Model;
 using Elasticsearch.Net;
 using log4net;
@@ -25,19 +26,10 @@ namespace elastic.log4net.Appender
         private List<string> elasticNodes = new List<string>();
         private ReadOnlyPropertiesDictionary globalPropertiesProcessed;
 
-
         /// <summary>
         /// Base index to insert data into a Elasticsearch database.
         /// </summary>
         public string BaseIndex { get; set; } = "log4net";
-        /// <summary>
-        /// Username for Elasticsearch Basic Authentication.
-        /// </summary>
-        public string UserName { get; set; } = null;
-        /// <summary>
-        /// Password for Elasticsearch Basic Authentication.
-        /// </summary>
-        public string Password { get; set; } = null;
         /// <summary>
         /// Enables log variables in GlobalContext
         /// </summary>
@@ -80,25 +72,10 @@ namespace elastic.log4net.Appender
         {
             if(this.client == null)
             {
-                var pool = ConfigureElasticSearchConnectionPool();
-                var settings = new ConnectionSettings(pool).DefaultIndex(this.BaseIndex);
-                if (UserName != null && Password != null)
-                {
-                    settings.BasicAuthentication(UserName, Password);
-                }
-                this.client = new ElasticClient(settings);
+                var connectionSettings = ElasticSearchConnectionHandler.CreateElasticSearchConnection(null);
+                connectionSettings.DefaultIndex(BaseIndex.ToLower());
+                this.client = new ElasticClient(connectionSettings);
             }
-        }
-
-        private StaticConnectionPool ConfigureElasticSearchConnectionPool()
-        {
-            var elasticNodeUris = new List<Uri>();
-            this.elasticNodes.ForEach(node =>
-            {
-                elasticNodeUris.Add(new Uri(node));
-            });
-            var pool = new StaticConnectionPool(elasticNodeUris);
-            return pool;
         }
 
         private LogEntry CreateLogEntryForElasticsearch(LoggingEvent loggingEvent)

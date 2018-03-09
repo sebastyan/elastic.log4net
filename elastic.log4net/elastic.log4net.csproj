@@ -51,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Appender\ElasticSearchAppender.cs" />
+    <Compile Include="Configuration\ElasticSearchConnectionConfiguration.cs" />
+    <Compile Include="Configuration\ElasticSearchPoolType.cs" />
+    <Compile Include="Handlers\ElasticSearchConnectionHandler.cs" />
     <Compile Include="Model\LogEntry.cs" />
     <Compile Include="Model\LogEntryException.cs" />
     <Compile Include="Model\LogEntryLocationInformation.cs" />
