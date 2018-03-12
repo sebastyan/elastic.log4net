@@ -16,14 +16,16 @@ using Nest;
 
 namespace elastic.log4net.Appender
 {
-    
+
     public class ElasticSearchAppender : AppenderSkeleton
     {/// <summary>
-    /// Log4net appender for ElasticSearch.
-    /// </summary>
+     /// Log4net appender for ElasticSearch.
+     /// </summary>
         private IElasticClient client;
         private List<string> elasticNodes = new List<string>();
         private ReadOnlyPropertiesDictionary globalPropertiesProcessed;
+
+        private const string RELOAD_GLOBAL_CACHE = "RELOAD_GLOBAL_CACHE";
 
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace elastic.log4net.Appender
         /// Property to be used for test purposes.
         /// </summary>
         public IElasticClient Client { set => client = value; }
-        
+
 
         /// <summary>
         /// 
@@ -78,7 +80,7 @@ namespace elastic.log4net.Appender
 
         private void InitializeElasticClientConnection()
         {
-            if(this.client == null)
+            if (this.client == null)
             {
                 var pool = ConfigureElasticSearchConnectionPool();
                 var settings = new ConnectionSettings(pool).DefaultIndex(this.BaseIndex);
@@ -154,11 +156,10 @@ namespace elastic.log4net.Appender
 
             //Avoid load GlobalContext information in for each log call.
             if (this.globalPropertiesProcessed == null
-                || (GlobalContext.Properties["RELOAD_GLOBLAL_CACHE"] != null 
-                && (bool)GlobalContext.Properties["RELOAD_GLOBLAL_CACHE"]))
+                || (GlobalContext.Properties[RELOAD_GLOBAL_CACHE] != null
+                && (bool)GlobalContext.Properties[RELOAD_GLOBAL_CACHE]))
             {
-                GlobalContext.Properties["RELOAD_GLOBLAL_CACHE"] = false;
-
+                GlobalContext.Properties.Remove(RELOAD_GLOBAL_CACHE);
                 var globalContexPropertiesMethods = GlobalContext.Properties
                 .GetType()
                 .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
@@ -175,7 +176,7 @@ namespace elastic.log4net.Appender
             {
                 var result = await this.client.IndexDocumentAsync(data);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ErrorHandler.Error("Error on ElasticsearchAppender adding new index.", ex);
             }
