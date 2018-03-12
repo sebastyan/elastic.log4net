@@ -19,7 +19,7 @@ A new section with log4net name needs to be declared inside configSections secti
 
 In order to configure configure the ElasticSearch's appender for the log4net, new appender tag needs to be define inside <log4net>. 
 
-### Current version (0.2.0)
+### Current version (0.2.x)
 ```xml
 <appender name="elasticappender" type="elastic.log4net.Appender.ElasticSearchAppender, elastic.log4net">
 	<elasticNode value="http://localhost:9200"></elasticNode>
@@ -41,7 +41,7 @@ In order to configure configure the ElasticSearch's appender for the log4net, ne
 
 **Important note:** `enableGlobalContextLog` uses reflection and it could penalize the performace. By default, only one time the GlobalContext properties will be loaded. In case that you add more GlobalContext properties runtime plese add this piece of code just after ser the new GlobalContext property.
 ```c#
-GlobalContext.Properties["RELOAD_GLOBLAL_CACHE"] = true;
+GlobalContext.Properties["RELOAD_GLOBAL_CACHE"] = true;
 ```
 
 
