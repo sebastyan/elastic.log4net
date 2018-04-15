@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>log4net.els</id>
-		<version>0.2.1</version>
+		<version>0.3.0</version>
 		<title>log4net.els</title>
 		<authors>Sebastián Mota Gómez</authors>
 		<owners>Sebastián Mota Gómez</owners>
@@ -11,7 +11,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<summary>log4net plugin to send log messages to an Elastic search node in order to store them.</summary>
 		<description>Library to send logs from application to an Elasticsearch nodes in order to save them on it. You can centralize the log messages in Elasticsearch node and review and work with the information remotely.</description>
-		<releaseNotes>Fix name for RELOAD_GLOBAL_CACHE.</releaseNotes>
+		<releaseNotes>Include disableConnectionPing configuration option in order to not make ping proccess on Elasticsearch node connection. And it includes index generation by date pattern.</releaseNotes>
 		<copyright>Copyright 2018</copyright>
 		<tags>Log log4net Elasticsearch Logging nest</tags>
 		<dependencies>
