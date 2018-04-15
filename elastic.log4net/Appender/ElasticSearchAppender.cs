@@ -49,6 +49,14 @@ namespace elastic.log4net.Appender
         /// </summary>
         public bool DisableLocationInfo { get; set; } = false;
         /// <summary>
+        /// Disable ping process to detect if nodes are alive or not.
+        /// </summary>
+        public bool DisableConnectionPing { get; set; } = false;
+        /// <summary>
+        /// Use an index pattern to create a part of index name dinamically
+        /// </summary>
+        public string IndexPattern { get; set; }
+        /// <summary>
         /// Property to be used for test purposes.
         /// </summary>
         public IElasticClient Client { set => client = value; }
@@ -87,6 +95,10 @@ namespace elastic.log4net.Appender
                 if (UserName != null && Password != null)
                 {
                     settings.BasicAuthentication(UserName, Password);
+                }
+                if (this.DisableConnectionPing)
+                {
+                    settings.DisablePing();
                 }
                 this.client = new ElasticClient(settings);
             }
@@ -174,7 +186,15 @@ namespace elastic.log4net.Appender
         {
             try
             {
-                var result = await this.client.IndexDocumentAsync(data);
+                if (string.IsNullOrEmpty(IndexPattern))
+                {
+                    var result = await this.client.IndexDocumentAsync(data);
+                }
+                else
+                {
+                    var result = await this.client.IndexAsync<LogEntry>(data, 
+                        idx => idx.Index(String.Format("{0}{1}", this.BaseIndex, DateTime.Now.ToString(IndexPattern))));
+                }
             }
             catch (Exception ex)
             {
