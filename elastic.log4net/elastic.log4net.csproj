@@ -55,6 +55,7 @@
     <Compile Include="Model\LogEntryException.cs" />
     <Compile Include="Model\LogEntryLocationInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RetryErrorsConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

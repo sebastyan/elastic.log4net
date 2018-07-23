@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using elastic.log4net.Model;
-using Elasticsearch.Net;
 using log4net;
 using log4net.Appender;
 using log4net.Core;
@@ -24,10 +24,10 @@ namespace elastic.log4net.Appender
         private IElasticClient client;
         private List<string> elasticNodes = new List<string>();
         private ReadOnlyPropertiesDictionary globalPropertiesProcessed;
+        private BlockingCollection<KeyValuePair<LogEntry, int>> errorMessage = new BlockingCollection<KeyValuePair<LogEntry, int>>();
 
         private const string RELOAD_GLOBAL_CACHE = "RELOAD_GLOBAL_CACHE";
-
-
+        
         /// <summary>
         /// Base index to insert data into a Elasticsearch database.
         /// </summary>
@@ -57,9 +57,23 @@ namespace elastic.log4net.Appender
         /// </summary>
         public string IndexPattern { get; set; }
         /// <summary>
+        /// Configure retry mode.
+        /// </summary>
+        public RetryErrorsConfiguration RetryErrorsConfiguration { get; set; }
+        /// <summary>
         /// Property to be used for test purposes.
         /// </summary>
-        public IElasticClient Client { set => client = value; }
+        public IElasticClient Client
+        {
+            set
+            {
+                client = value;
+                if (RetryErrorsConfiguration != null)
+                {
+                    RetryErrorMessages();
+                }
+            }
+        }
 
 
         /// <summary>
@@ -69,8 +83,7 @@ namespace elastic.log4net.Appender
         protected override void Append(LoggingEvent loggingEvent)
         {
             InitializeElasticClientConnection();
-            var logEntry = CreateLogEntryForElasticsearch(loggingEvent);
-            SendLogEvent(logEntry);
+            SendLogEvent(loggingEvent);
         }
 
         /// <summary>
@@ -101,17 +114,21 @@ namespace elastic.log4net.Appender
                     settings.DisablePing();
                 }
                 this.client = new ElasticClient(settings);
+                if(RetryErrorsConfiguration != null)
+                {
+                    RetryErrorMessages();
+                }
             }
         }
 
-        private StaticConnectionPool ConfigureElasticSearchConnectionPool()
+        private Elasticsearch.Net.StaticConnectionPool ConfigureElasticSearchConnectionPool()
         {
             var elasticNodeUris = new List<Uri>();
             this.elasticNodes.ForEach(node =>
             {
                 elasticNodeUris.Add(new Uri(node));
             });
-            var pool = new StaticConnectionPool(elasticNodeUris);
+            var pool = new Elasticsearch.Net.StaticConnectionPool(elasticNodeUris);
             return pool;
         }
 
@@ -182,24 +199,68 @@ namespace elastic.log4net.Appender
             return this.globalPropertiesProcessed;
         }
 
-        private async void SendLogEvent(LogEntry data)
+        private async void SendLogEvent(LoggingEvent loggingEvent)
         {
             try
             {
-                if (string.IsNullOrEmpty(IndexPattern))
+                var data = CreateLogEntryForElasticsearch(loggingEvent);
+                IIndexResponse result = await SendData(data);
+                if (!result.IsValid && CheckIfLogEntryCanBeRetried(loggingEvent))
                 {
-                    var result = await this.client.IndexDocumentAsync(data);
-                }
-                else
-                {
-                    var result = await this.client.IndexAsync<LogEntry>(data, 
-                        idx => idx.Index(String.Format("{0}{1}", this.BaseIndex, DateTime.Now.ToString(IndexPattern))));
+                    this.errorMessage.Add(new KeyValuePair<LogEntry, int>(data, 1));
                 }
             }
             catch (Exception ex)
             {
                 ErrorHandler.Error("Error on ElasticsearchAppender adding new index.", ex);
             }
+        }
+
+        private bool CheckIfLogEntryCanBeRetried(LoggingEvent loggingEvent)
+        {
+            return RetryErrorsConfiguration != null && CheckMinLogLevel(loggingEvent.Level);
+        }
+
+        private async Task<IIndexResponse> SendData(LogEntry data)
+        {
+            IIndexResponse result;
+            if (string.IsNullOrEmpty(IndexPattern))
+            {
+                result = await this.client.IndexDocumentAsync(data);
+            }
+            else
+            {
+                result = await this.client.IndexAsync<LogEntry>(data,
+                    idx => idx.Index(String.Format("{0}{1}", this.BaseIndex, DateTime.Now.ToString(IndexPattern))));
+            }
+
+            return result;
+        }
+
+        private bool CheckMinLogLevel(Level logEntryLevel)
+        {
+            if(logEntryLevel.Value >= RetryErrorsConfiguration.MinLevelToRetry.Value)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void RetryErrorMessages()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                do
+                {
+                    var data = this.errorMessage.Take();
+                    var result = SendData(data.Key).Result;
+                    if (!result.IsValid && data.Value < RetryErrorsConfiguration.MaxNumberOfRetries)
+                    {
+                        this.errorMessage.Add(new KeyValuePair<LogEntry, int>(data.Key, data.Value + 1));
+                        Thread.Sleep(RetryErrorsConfiguration.WaitTimeBetweenRetry);
+                    }
+                } while (true);
+            });
         }
     }
 }
