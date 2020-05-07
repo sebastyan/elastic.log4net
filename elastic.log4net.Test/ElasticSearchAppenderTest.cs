@@ -12,16 +12,15 @@ using log4net.Config;
 using log4net.Repository;
 using Moq;
 using Nest;
-using NUnit.Framework;
+using Xunit;
 
 namespace elastic.log4net.Test
 {
-    [TestFixture]
     public class ElasticSearchAppenderTest
     {
         private Fixture fixture = new Fixture();
 
-        [Test]
+        [Fact]
         public void LogMessageAreCorrectlySendToElasticSearch()
         {
             ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
