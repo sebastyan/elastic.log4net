@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>log4net.els</id>
+    <version>1.0.0-alpha</version>
+    <title>log4net.els</title>
+    <authors>Sebastián Mota Gómez</authors>
+    <owners>Sebastián Mota Gómez</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="file">license</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <projectUrl>https://github.com/sebastyan/elastic.log4net</projectUrl>
+    <description>Library to send logs from application to an Elasticsearch nodes in order to save them on it. You can centralize the log messages in Elasticsearch node and review and work with the information remotely.</description>
+    <summary>log4net plugin to send log messages to an Elastic search node in order to store them.</summary>
+    <releaseNotes>This version contains compatibility with .NetCore 2.0.</releaseNotes>
+    <copyright>Copyright 2020</copyright>
+    <tags>Log log4net Elasticsearch Logging nest</tags>
+    <dependencies>
+      <dependency id="Elasticsearch.Net" version="7.6.2" />
+      <dependency id="NEST" version="7.6.2" />
+      <dependency id="log4net" version="2.0.8" />
+    </dependencies>
+  </metadata>
+</package>
