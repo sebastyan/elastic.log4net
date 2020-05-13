@@ -1,9 +1,12 @@
 language: csharp
-solution: elastic.log4net.sln
+dist: xenial
+mono: none
+dotnet: 3.1
+
 install:
-  - nuget restore elastic.log4net.sln
-  - nuget install NUnit.Runners -Version 3.2.0 -OutputDirectory testrunner
+  - dotnet restore ./elastic.log4net/elastic.log4net.linux.csproj
 script:
-  - xbuild /p:Configuration=Release elastic.log4net.sln
-  - mono ./testrunner/NUnit.ConsoleRunner.3.2.0/tools/nunit3-console.exe ./elastic.log4net.Test/bin/Release/elastic.log4net.Test.dll
+  - dotnet build ./elastic.log4net/elastic.log4net.linux.csproj
+  - dotnet restore ./elastic.log4net.Test/elastic.log4net.Test.linux.csproj
+  - dotnet test ./elastic.log4net.Test/elastic.log4net.Test.linux.csproj
 
