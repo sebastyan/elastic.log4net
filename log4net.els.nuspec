@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>log4net.els</id>
-        <version>1.0.1-alpha</version>
+        <version>1.1.0</version>
         <title>log4net.els</title>
         <authors>Sebastián Mota Gómez</authors>
         <owners>Sebastián Mota Gómez</owners>
