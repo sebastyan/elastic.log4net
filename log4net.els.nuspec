@@ -18,12 +18,12 @@
             <group targetFramework=".NETFramework4.6.1">
                 <dependency id="Elasticsearch.Net" version="7.6.2" />
                 <dependency id="NEST" version="7.6.2" />
-                <dependency id="log4net" version="2.0.8" />
+                <dependency id="log4net" version="2.0.10" />
             </group>
             <group targetFramework=".NETStandard2.0">
                 <dependency id="Elasticsearch.Net" version="7.6.2" />
                 <dependency id="NEST" version="7.6.2" />
-                <dependency id="log4net" version="2.0.8" />
+                <dependency id="log4net" version="2.0.10" />
             </group>
         </dependencies>
     </metadata>
